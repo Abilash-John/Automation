@@ -1,18 +1,22 @@
 
 import time
 from selenium import webdriver
+from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 
 # Create a Chrome WebDriver instance
-driver = webdriver.Chrome()
+driver:WebDriver = webdriver.Chrome("/Users/shankar/Desktop/ChromeDriver/chromedriver")
 
 # Navigate to the Google search results page for data scientist jobs in Newport Beach, California
 driver.get("https://in.indeed.com/jobs?q=product+manager&l=Bangalore%2C+Karnataka&vjk=82c98bcd45739295&advn=9740249730601869")
 
+# /html/body/main/div/div[1]/div/div/div[5]/div[1]/div[5]/div/ul/li[1]
+# //*[@id="mosaic-provider-jobcards"]/ul/li[1]
+
 # Define XPath expressions for different pieces of information
 xpaths = {
-    'Role': "./td[@class='resultContent']/div[1]/h2/a/span",
+    'Role': ".//td[@class='resultContent']/div[1]/h2/a/span",
     'Company': "./td[@class='resultContent']/div[2]/span[1]",
     'Location': "./td[@class='resultContent']/div[2]/div/div",
     'Posted': "./div[@class='job-snippet']/span/text()",
@@ -29,7 +33,7 @@ jobs_done = 0
 # Scroll down repeatedly to load all job listings
 while True:
     # Find all job listing elements using the defined XPath
-    lis = driver.find_elements(By.XPATH, "//ul[@class='css-zu9cdh eu4oa1w0']")
+    lis = driver.find_elements(By.XPATH, "//*[@id='mosaic-provider-jobcards']/ul/li")
 
     # Break the loop if all job listings have been processed
     if jobs_done >= len(lis):
@@ -38,10 +42,10 @@ while True:
     # Iterate through each job listing element
     for li in lis[jobs_done:]:
         # Scroll the page to bring the current element into view
-        driver.execute_script('arguments[0].scrollIntoView({block: "center", behavior: "smooth"});', li)
+        # driver.execute_script('arguments[0].scrollIntoView({block: "center", behavior: "smooth"});', li)
 
         # Initialize a dictionary to store extracted data for the current listing
-        job_data = {}
+
 
         # Iterate through the defined XPath keys to extract information in the specified order
         for key in ['Role', 'Company', 'Location', 'Posted', 'Full / Part Time', 'Salary']:
@@ -54,15 +58,15 @@ while True:
                 t = '*missing data*'
 
             # Store the extracted data in the dictionary
-            job_data[key] = t
+            data[key].append(t)
 
         # Append the job data to the main data dictionary
-        data['Role'].append(job_data['Role'])
-        data['Company'].append(job_data['Company'])
-        data['Location'].append(job_data['Location'])
-        data['Posted'].append(job_data['Posted'])
-        data['Full / Part Time'].append(job_data['Full / Part Time'])
-        data['Salary'].append(job_data['Salary'])
+        data['Role'].append(data['Role'])
+        data['Company'].append(data['Company'])
+        data['Location'].append(data['Location'])
+        data['Posted'].append(data['Posted'])
+        data['Full / Part Time'].append(data['Full / Part Time'])
+        data['Salary'].append(data['Salary'])
 
         # Increment the counter for processed jobs and print progress
         jobs_done += 1
