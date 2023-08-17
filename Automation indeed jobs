@@ -17,13 +17,14 @@ driver.get("https://in.indeed.com/jobs?q=product+manager&l=Bangalore%2C+Karnatak
 # Define XPath expressions for different pieces of information
 xpaths = {
     'Role': ".//td[@class='resultContent']/div[1]/h2/a/span",
-    'Company': "./td[@class='resultContent']/div[2]/span[1]",
-    'Location': "./td[@class='resultContent']/div[2]/div/div",
-    'Posted': "./div[@class='job-snippet']/span/text()",
-    'Full / Part Time': "./td[@class='resultContent']/div[3]/div[2]/div/text()",
-    'Salary': "./td[@class='resultContent']/div[3]/div[1]/div/text()"
+    'Company': ".//td[@class='resultContent']/div[2]/span[1]",
+    'Location': ".//td[@class='resultContent']/div[2]/div",
+    'Posted': ".//span[@class='date']",
+    'Full / Part Time': ".//td[@class='resultContent']/div[3]/div[2]/div",
+    'Salary': ".//td[@class='resultContent']/div[3]/div[1]/div"
 }
-
+# //*[@id="mosaic-provider-jobcards"]/ul/li[1]/div/div[1]/div/div[1]/div/table[1]/tbody/tr/td/div[3]/div[1]/div/text()
+# //*[@id="mosaic-provider-jobcards"]/ul/li[1]/div/div[1]/div/div[1]/div/table[1]/tbody/tr/td/div[2]/div
 # Create an empty dictionary to store extracted data
 data = {key: [] for key in xpaths}
 
@@ -70,7 +71,7 @@ while True:
 
         # Increment the counter for processed jobs and print progress
         jobs_done += 1
-        print(f'{jobs_done=}', end='\r')
+        # print(f'{jobs_done=}', end='\r')
 
         # Introduce a short delay before processing the next listing
         time.sleep(.2)
